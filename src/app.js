@@ -9,6 +9,7 @@ const authRouter = require("./Routes/auth");
 const profileRouter = require("./Routes/profile");
 const requestRouter = require("./Routes/request");
 const userRouter = require("./Routes/user");
+const cors = require("cors");
 
 let app = express();
 let server = createServer(app);
@@ -21,7 +22,12 @@ app.get("/hello", (req, res) => {
     res.send("Hello, From Prince!");
 });
 
-app.use(express.json(), cookieParser()); // Middleware to parse JSON bodies and cookies
+const corsObject = {
+    origin: "http://localhost:5173", // Adjust this to your frontend URL
+    credentials: true, // Allow cookies to be sent
+};
+
+app.use(cors(corsObject), express.json(), cookieParser()); // Middleware to parse JSON bodies and cookies
 
 // Use authentication routes
 app.use('/auth', authRouter);

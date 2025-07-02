@@ -33,7 +33,7 @@ profileRouter.put("/update", userAuth, async (req, res) => {
 
         res.status(200).json({
             message: ` ${loggedInUser.firstName} your profile updated successfully`,
-            data: loggedInUser
+            user: loggedInUser
         });
     } catch (error) {
         res.status(500).json({ error: "Failed to update profile " + error.message });

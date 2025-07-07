@@ -55,13 +55,27 @@ userRouter.get("/feed", userAuth, async (req, res) => {
     try {
         const loggedInUser = req.user;
 
+        // find all users except the logged-in user and their connections
+        const connectionRequests = await ConnectionRequestModel.find({
+            $or: [
+                { sender: loggedInUser._id },
+                { receiver: loggedInUser._id }
+            ]
+        }).select('sender receiver');
+
+        const hideUsersFromFeed = new Set();
+        connectionRequests.forEach((request) => {
+            hideUsersFromFeed.add(request.sender.toString());
+            hideUsersFromFeed.add(request.receiver.toString());
+        });
+
         const { page = 1, limit = 10 } = req.query;
         const skip = (page - 1) * limit;
 
         const feed = await UserModel.find({
             $and: [
                 { _id: { $ne: loggedInUser._id } },
-                { _id: { $nin: loggedInUser.connections || [] } }
+                { _id: { $nin: Array.from(hideUsersFromFeed) } }
             ]
         }).select(USER_SAFE_DATA).skip(skip).limit(limit);
 

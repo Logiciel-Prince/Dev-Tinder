@@ -1,6 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/user');
+const nodemon = require('nodemon');
 
 const authRouter = express.Router();
 
@@ -16,7 +17,7 @@ authRouter.post("/signup", async(req, res) => {
         email: email,
         password: passwordHash, // Await the hash operation
         age: age,
-        gender: gender,
+        gender: gender || " ",
         createdAt: new Date(),
         updatedAt: new Date()
     });

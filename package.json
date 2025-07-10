@@ -4,7 +4,8 @@
   "main": "netlify/functions/api.js",
   "scripts": {
     "start": "netlify dev",
-    "build": "netlify build",
+    "build": "CI=true npm run postbuild",
+    "postbuild": "mkdir -p public && cp -r public/* public/ || true",
     "dev": "netlify dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
